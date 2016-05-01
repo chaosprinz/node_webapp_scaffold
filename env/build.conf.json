@@ -1,0 +1,22 @@
+{
+  "jade": {
+    "in": "source/templates",
+    "out": "source/javascripts/template.js"
+  },
+  "stylus": {
+    "in": "source/stylesheets",
+    "out": "app/public/css",
+    "main": "index.styl",
+    "libs": ["nib","jeet","rupture"]
+  },
+  "browserify": {
+    "in": "source/javascripts",
+    "out": "app/public/js",
+    "libdir": "lib"
+  },
+  "nodejs": {
+    "libs": "lib",
+    "entry": "index.js",
+    "app": "app"
+  }
+}

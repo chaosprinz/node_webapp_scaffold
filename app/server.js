@@ -1,12 +1,15 @@
+/* exported io */
 'use strict'
 
-function runServer() {  //setup libraries
-  const express = require('express')
-  const bodyParser = require('body-parser')
+//setup libraries
+const express = require('express')
+const bodyParser = require('body-parser')
 
-  const app = express()
-  const http = require('http').Server(app)
-  const io = require('socket.io')(http)
+const app = express()
+const http = require('http').Server(app)
+const io = require('socket.io')(http)
+
+function runServer() {
 
   //check and set Environment
   if(!process.env.PORT) process.env.PORT = 3000

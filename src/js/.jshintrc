@@ -1,0 +1,13 @@
+{
+  "browser": true,
+  "browserify": true,
+  "jquery": true,
+  "devel": true,
+  "esversion": 6,
+  "unused": true,
+  "undef": true,
+  "asi": true,
+  "globals": {
+    "io": false
+  }
+}
