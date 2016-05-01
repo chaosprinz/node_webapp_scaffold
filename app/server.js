@@ -10,7 +10,8 @@ function runServer() {  //setup libraries
 
   //check and set Environment
   if(!process.env.PORT) process.env.PORT = 3000
-  if(!process.env.CONFIGS) process.env.CONFIGS = process.cwd() + "/conf"
+  if(!process.env.APPDIR) process.env.APPDIR = process.cwd() + "/app"
+  if(!process.env.CONFIGS) process.env.CONFIGS = process.env.APPDIR + "/conf"
 
   //configure express-app
   app.set('view engine', 'pug')

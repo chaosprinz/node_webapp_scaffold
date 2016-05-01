@@ -7,6 +7,7 @@ const sinonChai = require('sinon-chai')
 chai.should()
 chai.use(sinonChai)
 
+process.env.APPDIR = process.cwd() + "/app"
 process.env.CONFIGS = process.cwd() + "/test/routes/fixtures/conf"
 
 
@@ -14,7 +15,7 @@ describe('home',function(){
 
   const routeStringsConfig = require("./fixtures/conf/strings")
 
-  let routeFile = process.cwd() + "/routes/index"
+  let routeFile = process.env.APPDIR + "/routes/index"
   let indexRoutes = require(routeFile)
 
   let reloadRouteFile = function(){

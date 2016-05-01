@@ -1,4 +1,4 @@
 'use strict'
 
-const server = require("./lib/server")
+const server = require("./app/server")
 server()
