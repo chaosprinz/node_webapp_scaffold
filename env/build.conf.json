@@ -1,16 +1,16 @@
 {
   "jade": {
-    "in": "source/templates",
-    "out": "source/javascripts/template.js"
+    "in": "src/templates",
+    "out": "src/javascripts/template.js"
   },
   "stylus": {
-    "in": "source/stylesheets",
+    "in": "src/stylesheets",
     "out": "app/public/css",
     "main": "index.styl",
     "libs": ["nib","jeet","rupture"]
   },
   "browserify": {
-    "in": "source/javascripts",
+    "in": "src/js",
     "out": "app/public/js",
     "libdir": "lib"
   },
