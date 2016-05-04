@@ -31,8 +31,7 @@ const Builder = {
 
   compileStylus: function(action, path){
     let cmd = "node node_modules\\stylus\\bin\\stylus"
-    cmd += ` source\\stylesheets\\index.styl ${Builder.config.stylus.in}\\`
-    cmd += `${Builder.config.stylus.main}`
+    cmd += ` ${Builder.config.stylus.in}\\${Builder.config.stylus.main}`
     Builder.config.stylus.libs.forEach(function(lib){
       cmd += ` -u ${lib}`
     })

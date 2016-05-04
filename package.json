@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "mocha",
+    "test": "./node_modules/.bin/mocha",
     "server": "./node_modules/.bin/supervisor -w app -i app/public index.js",
+    "clean": "./node_modules/.bin/rimraf app/public/css/* app/public/js/*",
     "watch": "node ./env/watch_script",
-    "build": "node ./env/build_script",
-    "clean": "./node_modules/.bin/rimraf app/public/css/* app/public/js/main.js"
+    "build:dev": "npm run clean && node ./env/build_script -d",
+    "build:product": "npm run clean && node ./env/build_script"
   },
   "keywords": [
     "Express",
@@ -28,6 +29,7 @@
     "jshint": "^2.9.2",
     "livereload": "^0.4.1",
     "mocha": "^2.4.5",
+    "nib": "^1.1.0",
     "rimraf": "^2.5.2",
     "rupture": "^0.6.1",
     "sinon": "^1.17.3",
