@@ -1,7 +1,7 @@
 {
-  "jade": {
+  "pug": {
     "in": "src/templates",
-    "out": "src/javascripts/template.js"
+    "out": "src/js/template.js"
   },
   "stylus": {
     "in": "src/stylesheets",
@@ -12,7 +12,8 @@
   "browserify": {
     "in": "src/js",
     "out": "app/public/js",
-    "libdir": "lib"
+    "libdir": "lib",
+    "ignore": ["lib/runtime.js"]
   },
   "nodejs": {
     "libs": "lib",

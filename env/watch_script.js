@@ -10,16 +10,16 @@ const Builder = require('./builder')
 Builder.debugFlag = true
 
 /*
-## JadeWatcher
+## pugWatcher
 Watching for files in the template-source-directory.
 These files are going to be rendered in the front-end, so they have to be
 precompiled to a function.
-Look at env/client_jade.js for details about this process.
+Look at env/client_pug.js for details about this process.
  */
-const jadeWatcher = chokidar.watch(Builder.config.jade.in, { persistent: true })
+const pugWatcher = chokidar.watch(Builder.config.pug.in, { persistent: true })
 
-jadeWatcher
-  .on('all', Builder.compileJade)
+pugWatcher
+  .on('all', Builder.compilePug)
 
 /*
 ## StylusWatcher

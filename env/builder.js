@@ -2,31 +2,13 @@
 
 const child_process = require('child_process')
 const config = require('./build.conf')
+const buildPugTemplates = require('./client_pug')
 
 const Builder = {
   config: config,
   debugFlag: false,
-  compileJade:  function(action, path){
-    let cmd = `node env/client_jade ${Builder.config.jade.in} ${Builder.config.jade.out}`
-    let callback = function(err, stdout, stderr){
-      if(err) {
-        console.error("JadeWatcher error:")
-        console.error(err)
-      }
-      if(stderr) {
-        console.error("Jade compile-error:")
-        console.error(stderr)
-      }
-      console.log("Jade compiler-output:")
-      console.log(stdout)
-    }
-
-    if(action){
-      console.log(`Jade: ${action} on ${path}`)
-      child_process.exec(cmd, callback)
-    } else {
-      child_process.execSync(cmd)
-    }
+  compilePug:  function(){
+    buildPugTemplates(Builder.config.pug.in, Builder.config.pug.out)
   },
 
   compileStylus: function(action, path){

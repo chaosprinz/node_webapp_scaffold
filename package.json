@@ -9,8 +9,8 @@
     "server": "./node_modules/.bin/supervisor -w app -i app/public index.js",
     "clean": "./node_modules/.bin/rimraf app/public/css/* app/public/js/*",
     "watch": "node ./env/watch_script",
-    "build:dev": "npm run clean && node ./env/build_script -d",
-    "build:product": "npm run clean && node ./env/build_script"
+    "build:dev": "node ./env/build_script -d",
+    "build:product": "node ./env/build_script"
   },
   "keywords": [
     "Express",
