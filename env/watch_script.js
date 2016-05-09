@@ -50,7 +50,7 @@ Linting Javascript-files
  */
  const publicjsWatcher = chokidar.watch(Builder.config.browserify.in, {
    persistent: true,
-   ignored: /template.js/
+   ignored: /template.js|runtime.js/
  })
 publicjsWatcher.on('all', Builder.lint)
 const nodejsWatcher = chokidar.watch([

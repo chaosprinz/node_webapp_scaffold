@@ -13,7 +13,7 @@
     "in": "src/js",
     "out": "app/public/js",
     "libdir": "lib",
-    "ignore": ["lib/runtime.js"]
+    "lint_ignore": ["runtime.js$"]
   },
   "nodejs": {
     "libs": "lib",

@@ -50,24 +50,27 @@ buildDomain.run(function(){
 
   jsFilePusher(jsDir)
   jsFilePusher(jsLibs)
-
+  console.log(jsFiles)
   jsFiles.forEach(function(file){
-    console.log(`linting ${file}`)
-    let lintOut
-    try {
-      lintOut = Builder.lint(false, file)
-      console.log(lintOut.toString())
-    } catch (err){
-      console.error(err.stdout.toString())
-      console.error("\n")
-    }
+    Builder.lint(false, file).then(function(data){
+      console.log(`linting ${file}`)
+      console.log(data.join("\n"))
+    }).catch(function(err){
+      console.error(err)
+    })
   })
+  /***
+  console.log(jsFiles[3])
+  Builder.lint(false, jsFiles[0]).then(function(data){
+    console.log(data)
+  })
+  */
 
-  checkAndClean(conf.stylus.out)
-  Builder.compileStylus(false)
+  //checkAndClean(conf.stylus.out)
+  //Builder.compileStylus(false)
 
-  Builder.compilePug()
+  //Builder.compilePug()
 
-  checkAndClean(conf.browserify.out)
-  Builder.rebuildJavascripts(false)
+  //checkAndClean(conf.browserify.out)
+  //Builder.rebuildJavascripts().then((err) => {console.log("Built browser-js")})
 })
