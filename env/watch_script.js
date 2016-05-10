@@ -18,8 +18,9 @@ Look at env/client_pug.js for details about this process.
  */
 const pugWatcher = chokidar.watch(Builder.config.pug.in, { persistent: true })
 
-pugWatcher
-  .on('all', Builder.compilePug)
+pugWatcher.on('all', (action, path) => {
+  Builder.compilePug()
+})
 
 /*
 ## StylusWatcher
@@ -30,7 +31,13 @@ index.styl-file on changes.
 const stylusWatcher = chokidar.watch(Builder.config.stylus.in,{ persistent: true })
 
 
-stylusWatcher.on('all', Builder.compileStylus)
+stylusWatcher.on('all', (action, path) => {
+  Builder.compileStylus(path).then((data) => {
+    console.log(action + ' on ' + path + ":\n")
+    console.log("rebuilt css")
+    console.log()
+  })
+})
 
 /*
 ## BrowserifyWatcher
@@ -43,7 +50,13 @@ const browserifyWatcher = chokidar.watch(Builder.config.browserify.in, {
 })
 
 
-browserifyWatcher.on('all', Builder.rebuildJavascripts)
+browserifyWatcher.on('all', (action, path) => {
+  Builder.rebuildJavascripts().then((data) => {
+    console.log(action + ' on ' + path + ":\n")
+    console.log("rebuilt pubplic-js")
+    console.log()
+  })
+})
 
 /*
 Linting Javascript-files
@@ -52,7 +65,14 @@ Linting Javascript-files
    persistent: true,
    ignored: /template.js|runtime.js/
  })
-publicjsWatcher.on('all', Builder.lint)
+publicjsWatcher.on('all', (action, path) => {
+  Builder.lint(path).then((data) => {
+    console.log(action + ' on ' + path + ":\n")
+    console.log("Linting " + path)
+    console.log(data.join("\n"))
+    console.log()
+  })
+})
 const nodejsWatcher = chokidar.watch([
   Builder.config.nodejs.libs,
   Builder.config.nodejs.entry,
@@ -62,4 +82,11 @@ const nodejsWatcher = chokidar.watch([
 ], {
   persistent: true
 })
-nodejsWatcher.on('all', Builder.lint)
+nodejsWatcher.on('all', (action, path) => {
+  Builder.lint(path).then((data) => {
+    console.log(action + ' on ' + path + ":\n")
+    console.log("Linting " + path)
+    console.log(data.join("\n"))
+    console.log()
+  })
+})

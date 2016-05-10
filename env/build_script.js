@@ -20,19 +20,22 @@ buildDomain.run(function(){
     Builder.debugFlag = true
   }
 
-  function checkAndClean(dir){
-    let dirStat
+  function checkAndClean(file, isDir){
+    if(typeof isDir === 'undefined') isDir = true
+    let fileStat
     try {
-      dirStat = fs.statSync(dir)
+      fileStat = fs.statSync(file)
     }
     catch (err) {
-      dirStat = false
+      fileStat = false
     }
     finally {
-      if(dirStat){
-        rmrf.sync(dir)
+      if(fileStat){
+        rmrf.sync(file)
       }
-      fs.mkdirSync(dir)
+      if (isDir) {
+        fs.mkdirSync(file)
+      }
     }
   }
   let jsDir = conf.browserify.in
@@ -55,22 +58,21 @@ buildDomain.run(function(){
     Builder.lint(false, file).then(function(data){
       console.log(`linting ${file}`)
       console.log(data.join("\n"))
+      console.log()
     }).catch(function(err){
       console.error(err)
     })
   })
-  /***
-  console.log(jsFiles[3])
-  Builder.lint(false, jsFiles[0]).then(function(data){
-    console.log(data)
+
+  checkAndClean(conf.stylus.out, false)
+  Builder.compileStylus(false).then((data) => {
+    console.log("Compiled stylus to " + conf.stylus.out)
   })
-  */
 
-  //checkAndClean(conf.stylus.out)
-  //Builder.compileStylus(false)
+  Builder.compilePug().then(() => {
+    console.log("Built template-functions")
+  })
 
-  //Builder.compilePug()
-
-  //checkAndClean(conf.browserify.out)
-  //Builder.rebuildJavascripts().then((err) => {console.log("Built browser-js")})
+  checkAndClean(conf.browserify.out)
+  Builder.rebuildJavascripts().then((err) => {console.log("Built browser-js")})
 })
