@@ -4,10 +4,10 @@
     "out": "src/js/template.js"
   },
   "stylus": {
-    "in": "src/stylesheets",
-    "out": "app/public/css",
-    "main": "index.styl",
-    "libs": ["nib","jeet","rupture"]
+    "in": "src/stylesheets/index.styl",
+    "out": "app/public/css/main.css",
+    "libs": ["nib","jeet","rupture"],
+    "mixin_paths": ["src/stylesheets"]
   },
   "browserify": {
     "in": "src/js",

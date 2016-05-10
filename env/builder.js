@@ -5,47 +5,40 @@ const Promise = require('bluebird')
 const browserify = Promise.promisifyAll(require('browserify'))
 const Fs = Promise.promisifyAll(require('fs'))
 const JSHINT = require("jshint").JSHINT
+const stylus = require("stylus")
 const config = require('./build.conf')
 const buildPugTemplates = require('./client_pug')
+
 
 const Builder = {
   config: config,
   debugFlag: false,
   compilePug:  function(){
-    buildPugTemplates(Builder.config.pug.in, Builder.config.pug.out)
+    return Promise.resolve(buildPugTemplates(Builder.config.pug.in, Builder.config.pug.out))
   },
 
-  compileStylus: function(action, path){
-    let cmd = "node node_modules\\stylus\\bin\\stylus"
-    cmd += ` ${Builder.config.stylus.in}\\${Builder.config.stylus.main}`
-    Builder.config.stylus.libs.forEach(function(lib){
-      cmd += ` -u ${lib}`
+  compileStylus: function(path){
+    path = path || Builder.config.stylus.in
+    return Fs.readFileAsync(path, "utf-8").then(function(data){
+      let css = stylus(data)
+      css.renderAsync = Promise.promisify(css.render)
+      css.set('filename', path.split("/")[-1])
+
+      Builder.config.stylus.mixin_paths.forEach((mixinPath) => {
+        css.include(process.cwd() + "/" + mixinPath)
+      })
+
+      Builder.config.stylus.libs.forEach((lib) => {
+        lib = require(lib)
+        css.use(lib())
+      })
+      return css.renderAsync()
+    }).then(function(data){
+      return Fs.writeFileAsync(Builder.config.stylus.out, data)
     })
-    cmd += ` --out ${Builder.config.stylus.out}`
-    if(this.debugFlag) cmd += ' --sourcemap'
-
-    let callback = function(err, stdout, stderr){
-      if(err) {
-        console.error("StylusWatcher error:")
-        console.error(err)
-      }
-      if(stderr) {
-        console.error("Stylus compile-error:")
-        console.error(stderr)
-      }
-      console.log("Stylus compiler-output")
-      console.log(stdout)
-    }
-    if(action){
-      console.log(`Stylus: ${action} on ${path}`)
-      child_process.exec(cmd, callback)
-    } else {
-      child_process.execSync(cmd)
-    }
-
   },
 
-  rebuildJavascripts: function(action,path){
+  rebuildJavascripts: function(path){
     let js = browserify(`${Builder.config.browserify.in}/main.js`)
     js = js.bundle()
     return Fs.writeFileAsync(
@@ -54,7 +47,7 @@ const Builder = {
     )
   },
 
-  lint: function(action, script){
+  lint: function(script){
     let exit = false
     Builder.config.browserify.lint_ignore.forEach(function(file){
       file = new RegExp(file)
