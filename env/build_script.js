@@ -53,9 +53,8 @@ buildDomain.run(function(){
 
   jsFilePusher(jsDir)
   jsFilePusher(jsLibs)
-  console.log(jsFiles)
   jsFiles.forEach(function(file){
-    Builder.lint(false, file).then(function(data){
+    Builder.lint(file).then(function(data){
       console.log(`linting ${file}`)
       console.log(data.join("\n"))
       console.log()

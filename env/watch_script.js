@@ -1,4 +1,4 @@
-'use strict'
+  'use strict'
 
 /*
 # Build-environment filewatcher-script
@@ -45,7 +45,7 @@ Watch for changes on client-javascript in their source dir and and let
 browserify rebuild them.
  */
 
-const browserifyWatcher = chokidar.watch(Builder.config.browserify.in, {
+const browserifyWatcher = chokidar.watch(Builder.config.browserify.in + "/**/*.js", {
   persistent: true
 })
 
@@ -61,30 +61,29 @@ browserifyWatcher.on('all', (action, path) => {
 /*
 Linting Javascript-files
  */
- const publicjsWatcher = chokidar.watch(Builder.config.browserify.in, {
-   persistent: true,
-   ignored: /template.js|runtime.js/
+ const publicjsWatcher = chokidar.watch(Builder.config.browserify.in + "/**/*.js", {
+   persistent: true
  })
 publicjsWatcher.on('all', (action, path) => {
+  console.log(action + ' on ' + path + ":\n")
   Builder.lint(path).then((data) => {
-    console.log(action + ' on ' + path + ":\n")
     console.log("Linting " + path)
     console.log(data.join("\n"))
     console.log()
   })
 })
 const nodejsWatcher = chokidar.watch([
-  Builder.config.nodejs.libs,
+  Builder.config.nodejs.libs + "/**/*.js",
   Builder.config.nodejs.entry,
-  Builder.config.nodejs.app + "/routes",
+  Builder.config.nodejs.app + "/routes/**/*.js",
   Builder.config.nodejs.app + "/server.js",
-  Builder.config.nodejs.app + "/models"
+  Builder.config.nodejs.app + "/models/**.js"
 ], {
   persistent: true
 })
 nodejsWatcher.on('all', (action, path) => {
+  console.log(action + ' on ' + path + ":\n")
   Builder.lint(path).then((data) => {
-    console.log(action + ' on ' + path + ":\n")
     console.log("Linting " + path)
     console.log(data.join("\n"))
     console.log()
