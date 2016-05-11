@@ -18,12 +18,13 @@ function runServer() {
 
   //configure express-app
   app.set('view engine', 'pug')
+  app.set('views', process.cwd() + "/app/views")
   app.use(bodyParser.json()) // support json encoded bodies
   app.use(bodyParser.urlencoded({ extended: true })) // support encoded bodies
   app.use(express.static('public'))
 
   //setup express-routes
-  const baseRoutes = require('../routes/index')
+  const baseRoutes = require('./routes/index')
   app.get('/', baseRoutes.home)
 
   //start the server
