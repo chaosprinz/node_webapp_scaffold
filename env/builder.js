@@ -48,6 +48,9 @@ const Builder = {
   },
 
   lint: function(script){
+    //we iterate over the config for files to ignore and test them as a RegExp
+    //against the given script-path.
+    //we return with a resolved promise with a message, when theres a matcch.
     let exit = false
     Builder.config.browserify.lint_ignore.forEach(function(file){
       file = new RegExp(file)
@@ -55,19 +58,30 @@ const Builder = {
         exit = true
       }
     })
-    if(exit)
-      return Promise.resolve([`${script} not linted, cause of build.conf`])
 
-    return Fs.readFileAsync(script, "utf-8")
-      .then(function(data){
-        JSHINT(data, {undef: true}, {})
-        let hintErrors = JSHINT.errors.map((hintError) => {
-          let msg = `L${hintError.line}-C${hintError.character}: `
-          msg += `${hintError.evidence}\nError: ${hintError.reason}`
-          return msg
-        })
-        return Promise.resolve(hintErrors)
+    if(exit) {
+      return Promise.resolve([`${script} not linted, cause of build.conf`])
+    }
+
+    //we check which jshintrc-file to use
+    let jshintrc = process.cwd()
+    if(/^src[\/|\\]/.test(script)){
+      jshintrc += "/src/js/.jshintrc"
+    } else {
+      jshintrc += "/.jshintrc"
+    }
+    return Fs.readFileAsync(jshintrc, "utf-8").then( (data) => {
+      jshintrc = JSON.parse(data)
+      return Fs.readFileAsync(script, "utf-8")
+    }).then( (data) => {
+      JSHINT(data, jshintrc, {})
+      let hintErrors = JSHINT.errors.map((hintError) => {
+        let msg = `L${hintError.line}-C${hintError.character}: `
+        msg += `${hintError.evidence}\nError: ${hintError.reason}`
+        return msg
       })
+      return Promise.resolve(hintErrors)
+    })
   }
 }
 
